@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: bronze_sales #  Must match the filename of a model -- including case sensitivity.
+    config:
+        materialized: table
+    columns:
+      - name: sales_id
+        data_tests:
+          - unique
+          - not_null
+      - name: payment_method
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['Card','Gift Card','Cash','Digital Wallet']
+      - name: gross_amount
+        data_tests:
+          - generic_non_negative
+  - name: bronze_date
+    config:
+        materialized: table
+    columns:
+      - name: date_sk
+        data_tests:
+          - unique
+          - not_null
+  - name: bronze_store
+    columns:
+      - name: store_sk
+        data_tests:
+          - unique
+          - not_null
+      - name: country
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['USA','Canada']
+      - name: store_name
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['MegaMart Manhattan','MegaMart Brooklyn','MegaMart Austin','MegaMart San Jose','MegaMart Toronto']
+                # specified values are case sensitive, should foolow the same format as available in the DB
+  - name: bronze_product
+    columns:
+      - name: product_sk
+        data_tests:
+          - unique
+          - not_null
+  - name: bronze_customer
+    columns:
+      - name: customer_sk
+        data_tests:
+          - unique
+          - not_null
